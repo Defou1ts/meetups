@@ -5,6 +5,8 @@ import { CreateUserDto } from './dto/create-user-dto';
 import { RolesService } from 'src/roles/roles.service';
 import { SetRoleDto } from './dto/set-role.dto';
 import { UserRoles } from './constants/user-roles';
+import { Role } from 'src/roles/models/roles.model';
+import { Meetup } from 'src/meetups/models/meetups.model';
 
 @Injectable()
 export class UsersService {
@@ -25,14 +27,20 @@ export class UsersService {
 
 	async getAllUsers() {
 		const users = await this.usersRepository.findAll({
-			include: { all: true },
+			include: [
+				{ model: Role, attributes: ['value', 'id'] },
+				{ model: Meetup, attributes: ['name', 'description', 'id'], through: { attributes: [] } },
+			],
 			attributes: { exclude: ['roleId'] },
 		});
 		return users;
 	}
 
 	async getUserByEmail(email: string) {
-		const user = await this.usersRepository.findOne({ where: { email }, include: { all: true } });
+		const user = await this.usersRepository.findOne({
+			where: { email },
+			include: { all: true },
+		});
 		return user;
 	}
 
