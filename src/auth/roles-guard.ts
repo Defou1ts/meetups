@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
-import { ROLES_KEY } from './roles-auth.decorator';
+import { ROLES_KEY } from './decrorators/roles-auth.decorator';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -30,16 +30,9 @@ export class RolesGuard implements CanActivate {
 				return true;
 			}
 
-			const authHeader = req.headers.authorization;
-			const bearer = authHeader.split(' ')[0];
-			const token = authHeader.split(' ')[1];
+			const request = context.switchToHttp().getRequest();
 
-			if (bearer !== 'Bearer' || !token) {
-				throw new UnauthorizedException({ message: 'Not authorized' });
-			}
-
-			const user = this.jwtService.verify(token);
-			req.user = user;
+			const user = request.user;
 
 			return user.role.value === requiredRole;
 		} catch (e) {

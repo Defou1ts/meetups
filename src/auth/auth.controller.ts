@@ -1,7 +1,11 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from 'src/users/dto/create-user-dto';
 import { AuthService } from './auth.service';
+import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { JwtRefreshTokenGuard } from './guards/jwt-refresh.guard';
+import { UserParam } from './decrorators/user.decorator';
+import { User } from 'src/users/users.model';
 
 @ApiTags('Authorization')
 @Controller('auth')
@@ -16,5 +20,11 @@ export class AuthController {
 	@Post('/registration')
 	registration(@Body() userDto: CreateUserDto) {
 		return this.authService.registration(userDto);
+	}
+
+	@UseGuards(JwtRefreshTokenGuard)
+	@Post('/updateAccess')
+	updateAccess(@UserParam() user) {
+		return this.authService.getNewAccessAndRefreshToken({ email: user.email });
 	}
 }
