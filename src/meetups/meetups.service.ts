@@ -3,13 +3,18 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Meetup } from './meetups.model';
 import { CreateMeetupDto } from './dto/create-meetup.dto';
 import { UpdateMeetupDto } from './dto/update-meetup.dto';
+import { AddTagDto } from './dto/add-tag.dto';
+import { TagsService } from 'src/tags/tags.service';
 
 @Injectable()
 export class MeetupsService {
-	constructor(@InjectModel(Meetup) private meetupsRepository: typeof Meetup) {}
+	constructor(
+		@InjectModel(Meetup) private meetupsRepository: typeof Meetup,
+		private tagsService: TagsService,
+	) {}
 
 	async getAllMeetups() {
-		return await this.meetupsRepository.findAll({ include: { all: true } });
+		return await this.meetupsRepository.findAll({ include: { all: true, through: { attributes: [] } } });
 	}
 
 	async getMeetupById(id: string) {
@@ -39,5 +44,14 @@ export class MeetupsService {
 		if (!meetup) throw new NotFoundException();
 
 		await meetup.destroy();
+	}
+
+	async addTag({ meetupId, tagId }: AddTagDto) {
+		const meetup = await this.meetupsRepository.findByPk(meetupId);
+		const tag = await this.tagsService.getTagById(tagId);
+
+		if (!tag || !meetup) throw new NotFoundException();
+
+		await meetup.$add('tags', tag.id);
 	}
 }

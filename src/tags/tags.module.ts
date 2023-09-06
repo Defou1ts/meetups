@@ -10,5 +10,6 @@ import { MeetupTags } from './meetup-tags';
 	providers: [TagsService],
 	controllers: [TagsController],
 	imports: [SequelizeModule.forFeature([Meetup, Tag, MeetupTags])],
+	exports: [TagsService],
 })
 export class TagsModule {}

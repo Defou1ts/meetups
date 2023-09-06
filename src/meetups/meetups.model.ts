@@ -35,7 +35,7 @@ export class Meetup extends Model<Meetup, MeetupCreationAttrs> {
 	date: Date;
 
 	@BelongsToMany(() => Tag, () => MeetupTags)
-	tags: User[];
+	tags: Tag[];
 
 	@BelongsToMany(() => User, () => UserMeetups)
 	users: User[];

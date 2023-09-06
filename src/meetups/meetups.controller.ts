@@ -1,7 +1,8 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put } from '@nestjs/common';
 import { MeetupsService } from './meetups.service';
 import { CreateMeetupDto } from './dto/create-meetup.dto';
 import { UpdateMeetupDto } from './dto/update-meetup.dto';
+import { AddTagDto } from './dto/add-tag.dto';
 
 @Controller('meetups')
 export class MeetupsController {
@@ -30,5 +31,10 @@ export class MeetupsController {
 	@Delete(':id')
 	deleteById(@Param('id') id: string) {
 		return this.meetupsService.deleteMeetupById(id);
+	}
+
+	@Patch('addTag')
+	addTag(@Body() dto: AddTagDto) {
+		return this.meetupsService.addTag(dto);
 	}
 }
