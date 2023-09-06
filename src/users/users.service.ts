@@ -36,6 +36,12 @@ export class UsersService {
 		return user;
 	}
 
+	async updateUserRefreshTokenByEmail(email: string, hashedRefreshToken: string) {
+		const user = await this.usersRepository.findOne({ where: { email } });
+		user.set('hashedRefreshToken', hashedRefreshToken);
+		user.save();
+	}
+
 	async setRole(dto: SetRoleDto) {
 		const user = await this.usersRepository.findByPk(dto.userId);
 		const role = await this.roleService.getRoleByValue(dto.value);

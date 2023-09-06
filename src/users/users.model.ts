@@ -21,6 +21,10 @@ export class User extends Model<User, UserCreationAttrs> {
 	@Column({ type: DataType.STRING, allowNull: false })
 	password: string;
 
+	@ApiProperty({ example: '1234', description: 'Hashed Refresh Token' })
+	@Column({ type: DataType.STRING })
+	hashedRefreshToken: string;
+
 	@ForeignKey(() => Role)
 	@Column({ type: DataType.INTEGER })
 	roleId: number;

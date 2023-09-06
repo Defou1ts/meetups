@@ -6,8 +6,8 @@ import { User } from './users.model';
 import { Role } from '../auth/roles-auth.decorator';
 import { RolesGuard } from 'src/auth/roles-guard';
 import { SetRoleDto } from './dto/set-role.dto';
-import { BanUserDto } from './dto/ban-user.dto';
 import { UserRoles } from './constants/user-roles';
+import { JwtAuthenticationGuard } from 'src/auth/jwt-auth.guard';
 
 @ApiTags('Users')
 @Controller('users')
@@ -33,7 +33,7 @@ export class UsersController {
 	@ApiOperation({ summary: 'Set role' })
 	@ApiResponse({ status: 200 })
 	@Role(UserRoles.USER)
-	@UseGuards(RolesGuard)
+	@UseGuards(JwtAuthenticationGuard)
 	@Patch('role')
 	setRole(@Body() dto: SetRoleDto) {
 		return this.usersService.setRole(dto);
