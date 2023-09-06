@@ -6,6 +6,8 @@ import { User } from './users/users.model';
 import { RolesModule } from './roles/roles.module';
 import { Role } from './roles/roles.model';
 import { AuthModule } from './auth/auth.module';
+import { MeetupsModule } from './meetups/meetups.module';
+import { TagsModule } from './tags/tags.module';
 
 @Module({
 	imports: [
@@ -25,6 +27,8 @@ import { AuthModule } from './auth/auth.module';
 		UsersModule,
 		RolesModule,
 		AuthModule,
+		MeetupsModule,
+		TagsModule,
 	],
 })
 export class AppModule {}
