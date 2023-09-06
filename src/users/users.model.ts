@@ -1,6 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
+import { BelongsTo, BelongsToMany, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
+import { Meetup } from 'src/meetups/meetups.model';
 import { Role } from 'src/roles/roles.model';
+import { UserMeetups } from './user-meetups.model';
 
 interface UserCreationAttrs {
 	email: string;
@@ -31,4 +33,7 @@ export class User extends Model<User, UserCreationAttrs> {
 
 	@BelongsTo(() => Role)
 	role: Role;
+
+	@BelongsToMany(() => Meetup, () => UserMeetups)
+	meetups: Meetup[];
 }

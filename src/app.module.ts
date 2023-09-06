@@ -8,6 +8,10 @@ import { Role } from './roles/roles.model';
 import { AuthModule } from './auth/auth.module';
 import { MeetupsModule } from './meetups/meetups.module';
 import { TagsModule } from './tags/tags.module';
+import { Meetup } from './meetups/meetups.model';
+import { Tag } from './tags/tags.model';
+import { MeetupTags } from './tags/meetup-tags';
+import { UserMeetups } from './users/user-meetups.model';
 
 @Module({
 	imports: [
@@ -21,7 +25,7 @@ import { TagsModule } from './tags/tags.module';
 			username: process.env.POSTGRES_USERNAME,
 			password: process.env.POSTGRES_PASSWORD,
 			database: process.env.POSTGRES_DATABASE,
-			models: [User, Role],
+			models: [User, Role, Meetup, Tag, MeetupTags, UserMeetups],
 			autoLoadModels: true,
 		}),
 		UsersModule,
