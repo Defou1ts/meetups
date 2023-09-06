@@ -3,8 +3,8 @@ import { User } from './users.model';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateUserDto } from './dto/create-user-dto';
 import { RolesService } from 'src/roles/roles.service';
-import { AddRoleDto } from './dto/add-role.dto';
-import { BanUserDto } from './dto/ban-user.dto';
+import { SetRoleDto } from './dto/set-role.dto';
+import { UserRoles } from './constants/user-roles';
 
 @Injectable()
 export class UsersService {
@@ -15,16 +15,19 @@ export class UsersService {
 
 	async createUser(dto: CreateUserDto) {
 		const user = await this.usersRepository.create(dto);
-		const role = await this.roleService.getRoleByValue('USER');
+		const role = await this.roleService.getRoleByValue(UserRoles.USER);
 
-		await user.$set('roles', [role.id]);
-		user.roles = [role];
+		await user.$set('role', role.id);
+		user.role = role;
 
 		return user;
 	}
 
 	async getAllUsers() {
-		const users = await this.usersRepository.findAll({ include: { all: true } });
+		const users = await this.usersRepository.findAll({
+			include: { all: true },
+			attributes: { exclude: ['roleId'] },
+		});
 		return users;
 	}
 
@@ -33,23 +36,15 @@ export class UsersService {
 		return user;
 	}
 
-	async addRole(dto: AddRoleDto) {
+	async setRole(dto: SetRoleDto) {
 		const user = await this.usersRepository.findByPk(dto.userId);
 		const role = await this.roleService.getRoleByValue(dto.value);
 
 		if (role && user) {
-			await user.$add('role', role.id);
+			await user.$set('role', role.id);
 			return dto;
 		}
 
 		throw new HttpException('Unknown user or role', HttpStatus.NOT_FOUND);
-	}
-
-	async ban(dto: BanUserDto) {
-		const user = await this.usersRepository.findByPk(dto.userId);
-		user.banned = true;
-		user.banReason = dto.banReason;
-		await user.save();
-		return user;
 	}
 }
