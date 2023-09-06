@@ -24,7 +24,7 @@ export class MeetupsService {
 	}
 
 	async getMeetupById(id: string) {
-		const meetup = await this.meetupsRepository.findOne({ where: { id }, include: { all: true } });
+		const meetup = await this.meetupsRepository.findOne({ where: { id } });
 
 		if (!meetup) throw new NotFoundException();
 

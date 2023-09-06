@@ -8,7 +8,7 @@ export class TagsService {
 	constructor(@InjectModel(Tag) private tagsRepository: typeof Tag) {}
 
 	async getAllTags() {
-		return await this.tagsRepository.findAll({ include: { all: true, through: { attributes: [] } } });
+		return await this.tagsRepository.findAll();
 	}
 
 	async createTag(dto: CreateTagDto) {

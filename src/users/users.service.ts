@@ -27,10 +27,6 @@ export class UsersService {
 
 	async getAllUsers() {
 		const users = await this.usersRepository.findAll({
-			include: [
-				{ model: Role, attributes: ['value', 'id'] },
-				{ model: Meetup, attributes: ['name', 'description', 'id'], through: { attributes: [] } },
-			],
 			attributes: { exclude: ['roleId'] },
 		});
 		return users;
@@ -39,7 +35,6 @@ export class UsersService {
 	async getUserByEmail(email: string) {
 		const user = await this.usersRepository.findOne({
 			where: { email },
-			include: { all: true },
 		});
 		return user;
 	}
