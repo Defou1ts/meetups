@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Meetup } from './meetups.model';
+import { Meetup } from './models/meetups.model';
 import { CreateMeetupDto } from './dto/create-meetup.dto';
 import { UpdateMeetupDto } from './dto/update-meetup.dto';
 import { AddTagDto } from './dto/add-tag.dto';

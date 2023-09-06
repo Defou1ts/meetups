@@ -1,5 +1,5 @@
 import { Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
-import { Meetup } from 'src/meetups/meetups.model';
+import { Meetup } from 'src/meetups/models/meetups.model';
 import { Tag } from './tags.model';
 
 @Table({ tableName: 'meetup_tags', createdAt: false, updatedAt: false })

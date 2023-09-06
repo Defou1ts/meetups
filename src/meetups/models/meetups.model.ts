@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { BelongsToMany, Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
-import { MeetupTags } from 'src/tags/meetup-tags';
-import { Tag } from 'src/tags/tags.model';
+import { MeetupTags } from 'src/tags/models/meetup-tags';
+import { Tag } from 'src/tags/models/tags.model';
 import { UserMeetups } from 'src/users/user-meetups.model';
 import { User } from 'src/users/users.model';
 

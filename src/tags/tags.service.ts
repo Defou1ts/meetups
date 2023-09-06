@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateTagDto } from './dto/create-tag.dto';
-import { Tag } from './tags.model';
+import { Tag } from './models/tags.model';
 
 @Injectable()
 export class TagsService {
