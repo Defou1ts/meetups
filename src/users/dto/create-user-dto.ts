@@ -3,12 +3,12 @@ import { IsEmail, IsString, Length } from 'class-validator';
 
 export class CreateUserDto {
 	@ApiProperty({ example: 'user@mail.ru', description: 'Email' })
-	@IsString({ message: 'Must be string' })
-	@IsEmail({}, { message: 'Must be email' })
+	@IsString()
+	@IsEmail()
 	readonly email: string;
 
 	@ApiProperty({ example: '123456', description: 'Password' })
-	@IsString({ message: 'Must be string' })
+	@IsString()
 	@Length(4, 16, { message: 'more 4 and less 16' })
 	readonly password: string;
 }

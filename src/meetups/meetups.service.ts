@@ -6,7 +6,7 @@ import { UpdateMeetupDto } from './dto/update-meetup.dto';
 import { AddTagDto } from './dto/add-tag.dto';
 import { TagsService } from 'src/tags/tags.service';
 import { SignUserToMeetupDto } from './dto/sign-user-to-meetup.dto';
-import { User } from 'src/users/users.model';
+import { User } from 'src/users/models/users.model';
 import { MeetupQueryValueType, meetupSortQueryValues, meetupSortTypes } from './constants/sorts';
 import { Op } from 'sequelize';
 

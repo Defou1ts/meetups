@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
-import { User } from './users/users.model';
+import { User } from './users/models/users.model';
 import { RolesModule } from './roles/roles.module';
 import { Role } from './roles/models/roles.model';
 import { AuthModule } from './auth/auth.module';
@@ -11,7 +11,7 @@ import { TagsModule } from './tags/tags.module';
 import { Meetup } from './meetups/models/meetups.model';
 import { Tag } from './tags/models/tags.model';
 import { MeetupTags } from './tags/models/meetup-tags';
-import { UserMeetups } from './users/user-meetups.model';
+import { UserMeetups } from './users/models/user-meetups.model';
 
 @Module({
 	imports: [

@@ -3,8 +3,9 @@ import { CreateUserDto } from '../users/dto/create-user-dto';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
-import { User } from 'src/users/users.model';
+import { User } from 'src/users/models/users.model';
 import { JwtPayload } from './strategies/jwt-strategy';
+import { LoginResponseDto } from './dto/login-response.dto';
 
 @Injectable()
 export class AuthService {
@@ -13,7 +14,7 @@ export class AuthService {
 		private jwtService: JwtService,
 	) {}
 
-	async login(userDto: CreateUserDto) {
+	async login(userDto: CreateUserDto): Promise<LoginResponseDto> {
 		const user = await this.validateUser(userDto);
 
 		const { email } = user;
@@ -29,7 +30,7 @@ export class AuthService {
 		};
 	}
 
-	async registration(userDto: CreateUserDto) {
+	async registration(userDto: CreateUserDto): Promise<LoginResponseDto> {
 		const candidate = await this.userService.getUserByEmail(userDto.email);
 
 		if (candidate) {
@@ -77,7 +78,7 @@ export class AuthService {
 		await this.userService.updateUserRefreshTokenByEmail(email, hashedRefreshToken);
 	}
 
-	async getNewAccessAndRefreshToken(payload: JwtPayload) {
+	async getNewAccessAndRefreshToken(payload: JwtPayload): Promise<LoginResponseDto> {
 		const refreshToken = await this.getRefreshToken(payload);
 		await this.updateRefreshTokenInUser(refreshToken, payload.email);
 
