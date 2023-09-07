@@ -10,17 +10,17 @@ $ yarn install
 
 ## .development.env && .production.env
 
--   **_PORT_** - Your host of application
--   **_POSTGRES_HOST_** -
--   **_POSTGRES_USER_** -
--   **_POSTGRES_DB_** -
--   **_POSTGRES_PASSWORD_** -
--   **_POSTGRES_PORT_** -
--   **_JWT_ACCESS_TOKEN_SECRET_** -
--   **_JWT_ACCESS_TOKEN_EXPIRATION_TIME_** -
--   **_JWT_REFRESH_TOKEN_SECRET_** -
--   **_JWT_REFRESH_TOKEN_EXPIRATION_TIME_** -
--   **_SALT_** -
+-   **_PORT_** - Your port of application
+-   **_POSTGRES_HOST_** - postgres host (postgres if run in Docker)
+-   **_POSTGRES_USER_** - postgres user (postgres)
+-   **_POSTGRES_DB_** - postgres db name
+-   **_POSTGRES_PASSWORD_** - postgres password to connect (root)
+-   **_POSTGRES_PORT_** - postgres port
+-   **_JWT_ACCESS_TOKEN_SECRET_** - jwt access secret key
+-   **_JWT_ACCESS_TOKEN_EXPIRATION_TIME_** - jwt expiration time
+-   **_JWT_REFRESH_TOKEN_SECRET_** - jwt refresh secret key
+-   **_JWT_REFRESH_TOKEN_EXPIRATION_TIME_** - jwt refresh expiration time
+-   **_SALT_** - salt for bcryptjs, password or tokens hashing
 
 ## Basic functionality:
 
