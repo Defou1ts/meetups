@@ -8,6 +8,7 @@ import { TagsService } from 'src/tags/tags.service';
 import { SignUserToMeetupDto } from './dto/sign-user-to-meetup.dto';
 import { User } from 'src/users/users.model';
 import { MeetupQueryValueType, meetupSortQueryValues, meetupSortTypes } from './constants/sorts';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class MeetupsService {
@@ -16,11 +17,24 @@ export class MeetupsService {
 		private tagsService: TagsService,
 	) {}
 
-	async getAllMeetups(take: number = 10, skip: number = 0, sortBy: MeetupQueryValueType = 'ascending') {
+	async getAllMeetups(
+		name: string | undefined,
+		take: number = 10,
+		skip: number = 0,
+		sortBy: MeetupQueryValueType = 'ascending',
+	) {
 		if (!meetupSortQueryValues.includes(sortBy)) throw new BadRequestException();
-		const sortyType = meetupSortTypes[sortBy];
 
-		return await this.meetupsRepository.findAll({ limit: take, offset: skip, order: [['name', sortyType]] });
+		const sortType = meetupSortTypes[sortBy];
+
+		const whereCondition = name ? { name: { [Op.like]: `%${name.toLowerCase()}%` } } : {};
+
+		return await this.meetupsRepository.findAll({
+			where: whereCondition,
+			limit: take,
+			offset: skip,
+			order: [['name', sortType]],
+		});
 	}
 
 	async getMeetupById(id: string) {

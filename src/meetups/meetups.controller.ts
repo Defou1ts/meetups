@@ -15,8 +15,13 @@ export class MeetupsController {
 	constructor(private meetupsService: MeetupsService) {}
 
 	@Get()
-	getAll(@Query('take') take: number, @Query('skip') skip: number, @Query('sort_by') sortBy: MeetupQueryValueType) {
-		return this.meetupsService.getAllMeetups(take, skip, sortBy);
+	getAll(
+		@Query('name') name: string,
+		@Query('take') take: number,
+		@Query('skip') skip: number,
+		@Query('sort_by') sortBy: MeetupQueryValueType,
+	) {
+		return this.meetupsService.getAllMeetups(name, take, skip, sortBy);
 	}
 
 	@Get(':id')
