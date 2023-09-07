@@ -1,6 +1,7 @@
 import { Body, Controller, HttpCode, Post, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from 'src/users/dto/create-user-dto';
+
 import { AuthService } from './auth.service';
 import { JwtRefreshTokenGuard } from './guards/jwt-refresh.guard';
 import { UserParam } from './decrorators/user.decorator';
@@ -9,22 +10,22 @@ import { LoginResponseDto } from './dto/login-response.dto';
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-	constructor(private authService: AuthService) {}
+	constructor(private readonly authService: AuthService) {}
 
 	@ApiOperation({ summary: 'Login user' })
 	@ApiResponse({ status: 200, type: LoginResponseDto })
 	@HttpCode(200)
 	@Post('/login')
-	login(@Body() userDto: CreateUserDto) {
-		return this.authService.login(userDto);
+	async login(@Body() userDto: CreateUserDto) {
+		return await this.authService.login(userDto);
 	}
 
 	@ApiOperation({ summary: 'Register user' })
 	@ApiResponse({ status: 201, type: LoginResponseDto })
 	@HttpCode(201)
 	@Post('/registration')
-	registration(@Body() userDto: CreateUserDto) {
-		return this.authService.registration(userDto);
+	async registration(@Body() userDto: CreateUserDto) {
+		return await this.authService.registration(userDto);
 	}
 
 	@ApiOperation({ summary: 'Update user access token' })
@@ -32,7 +33,7 @@ export class AuthController {
 	@UseGuards(JwtRefreshTokenGuard)
 	@HttpCode(200)
 	@Post('/updateAccess')
-	updateAccess(@UserParam() user) {
-		return this.authService.getNewAccessAndRefreshToken({ email: user.email });
+	async updateAccess(@UserParam() user) {
+		return await this.authService.getNewAccessAndRefreshToken({ email: user.email });
 	}
 }

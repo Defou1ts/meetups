@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { BelongsTo, BelongsToMany, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
 import { Meetup } from 'src/meetups/models/meetups.model';
 import { Role } from 'src/roles/models/roles.model';
+
 import { UserMeetups } from './user-meetups.model';
 
 interface UserCreationAttrs {

@@ -1,20 +1,23 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Meetup } from './models/meetups.model';
-import { CreateMeetupDto } from './dto/create-meetup.dto';
-import { UpdateMeetupDto } from './dto/update-meetup.dto';
-import { AddTagDto } from './dto/add-tag.dto';
 import { TagsService } from 'src/tags/tags.service';
-import { SignUserToMeetupDto } from './dto/sign-user-to-meetup.dto';
-import { User } from 'src/users/models/users.model';
-import { MeetupQueryValueType, meetupSortQueryValues, meetupSortTypes } from './constants/sorts';
 import { Op } from 'sequelize';
+
+import { Meetup } from './models/meetups.model';
+import { meetupSortQueryValues, meetupSortTypes } from './constants/sorts';
+
+import type { CreateMeetupDto } from './dto/create-meetup.dto';
+import type { UpdateMeetupDto } from './dto/update-meetup.dto';
+import type { AddTagDto } from './dto/add-tag.dto';
+import type { SignUserToMeetupDto } from './dto/sign-user-to-meetup.dto';
+import type { User } from 'src/users/models/users.model';
+import type { MeetupQueryValueType } from './constants/sorts';
 
 @Injectable()
 export class MeetupsService {
 	constructor(
-		@InjectModel(Meetup) private meetupsRepository: typeof Meetup,
-		private tagsService: TagsService,
+		@InjectModel(Meetup) private readonly meetupsRepository: typeof Meetup,
+		private readonly tagsService: TagsService,
 	) {}
 
 	async getAllMeetups(

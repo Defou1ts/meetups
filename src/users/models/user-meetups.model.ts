@@ -1,5 +1,6 @@
 import { Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
 import { Meetup } from 'src/meetups/models/meetups.model';
+
 import { User } from './users.model';
 
 @Table({ tableName: 'user-meetups', createdAt: false, updatedAt: false })

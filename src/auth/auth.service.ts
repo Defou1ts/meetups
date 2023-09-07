@@ -1,17 +1,19 @@
 import { HttpException, HttpStatus, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { CreateUserDto } from '../users/dto/create-user-dto';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
-import { User } from 'src/users/models/users.model';
-import { JwtPayload } from './strategies/jwt-strategy';
-import { LoginResponseDto } from './dto/login-response.dto';
+
+import { HASH_SALT } from './constants/hash-salt';
+
+import type { JwtPayload } from './strategies/jwt-strategy';
+import type { LoginResponseDto } from './dto/login-response.dto';
+import type { CreateUserDto } from '../users/dto/create-user-dto';
 
 @Injectable()
 export class AuthService {
 	constructor(
-		private userService: UsersService,
-		private jwtService: JwtService,
+		private readonly userService: UsersService,
+		private readonly jwtService: JwtService,
 	) {}
 
 	async login(userDto: CreateUserDto): Promise<LoginResponseDto> {
@@ -37,7 +39,7 @@ export class AuthService {
 			throw new HttpException('User with such email already exists', HttpStatus.BAD_REQUEST);
 		}
 
-		const hashPassword = await bcrypt.hash(userDto.password, +process.env.SALT);
+		const hashPassword = await bcrypt.hash(userDto.password, HASH_SALT);
 		const user = await this.userService.createUser({ ...userDto, password: hashPassword });
 
 		const { email } = user;
@@ -45,10 +47,10 @@ export class AuthService {
 		const accessToken = await this.getAccesToken({ email });
 		const refreshToken = await this.getRefreshToken({ email });
 
-		const hashedRefreshToken = await bcrypt.hash(refreshToken, +process.env.SALT);
+		const hashedRefreshToken = await bcrypt.hash(refreshToken, HASH_SALT);
 
 		user.set('hashedRefreshToken', hashedRefreshToken);
-		user.save();
+		await user.save();
 
 		return {
 			accessToken,
@@ -59,7 +61,7 @@ export class AuthService {
 	async getAccesToken(payload: JwtPayload) {
 		const accessToken = this.jwtService.sign(payload, {
 			secret: process.env.JWT_ACCESS_TOKEN_SECRET,
-			expiresIn: +process.env.JWT_ACCESS_TOKEN_EXPIRATION_TIME,
+			expiresIn: Number(process.env.JWT_ACCESS_TOKEN_EXPIRATION_TIME),
 		});
 		return accessToken;
 	}
@@ -67,13 +69,13 @@ export class AuthService {
 	async getRefreshToken(payload: JwtPayload) {
 		const refreshToken = this.jwtService.sign(payload, {
 			secret: process.env.JWT_REFRESH_TOKEN_SECRET,
-			expiresIn: +process.env.JWT_REFRESH_TOKEN_EXPIRATION_TIME,
+			expiresIn: Number(process.env.JWT_REFRESH_TOKEN_EXPIRATION_TIME),
 		});
 		return refreshToken;
 	}
 
 	async updateRefreshTokenInUser(refreshToken: string, email: string) {
-		const hashedRefreshToken = await bcrypt.hash(refreshToken, +process.env.SALT);
+		const hashedRefreshToken = await bcrypt.hash(refreshToken, HASH_SALT);
 
 		await this.userService.updateUserRefreshTokenByEmail(email, hashedRefreshToken);
 	}
@@ -84,7 +86,7 @@ export class AuthService {
 
 		return {
 			accessToken: await this.getAccesToken(payload),
-			refreshToken: refreshToken,
+			refreshToken,
 		};
 	}
 

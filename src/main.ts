@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+
+import { AppModule } from './app.module';
 import { ClassValidationPipe } from './pipes/class-validation.pipe';
 
 async function start() {
@@ -19,7 +20,9 @@ async function start() {
 
 	app.useGlobalPipes(new ClassValidationPipe());
 
-	await app.listen(PORT, () => console.log(`Server started on port = ${PORT}`));
+	await app.listen(PORT, () => {
+		console.log(`Server started on port = ${PORT}`);
+	});
 }
 
-start();
+void start();

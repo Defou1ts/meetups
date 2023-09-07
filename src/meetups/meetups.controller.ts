@@ -1,37 +1,38 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query, Type, UseGuards } from '@nestjs/common';
-import { MeetupsService } from './meetups.service';
-import { CreateMeetupDto } from './dto/create-meetup.dto';
-import { UpdateMeetupDto } from './dto/update-meetup.dto';
-import { AddTagDto } from './dto/add-tag.dto';
-import { SignUserToMeetupDto } from './dto/sign-user-to-meetup.dto';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { UserParam } from 'src/auth/decrorators/user.decorator';
 import { User } from 'src/users/models/users.model';
 import { JwtAuthenticationGuard } from 'src/auth/guards/jwt-auth.guard';
-import { Meetup } from './models/meetups.model';
-import { MeetupQueryValueType } from './constants/sorts';
 import { UserRoles } from 'src/users/constants/user-roles';
 import { RequiredRole } from 'src/auth/decrorators/roles-auth.decorator';
 import { RolesGuard } from 'src/auth/guards/roles-guard';
 import { ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { swaggerAuthApiHeader } from 'src/auth/constants/swagger-auth-header';
 
+import { MeetupQueryValueType } from './constants/sorts';
+import { Meetup } from './models/meetups.model';
+import { SignUserToMeetupDto } from './dto/sign-user-to-meetup.dto';
+import { AddTagDto } from './dto/add-tag.dto';
+import { UpdateMeetupDto } from './dto/update-meetup.dto';
+import { CreateMeetupDto } from './dto/create-meetup.dto';
+import { MeetupsService } from './meetups.service';
+
 @ApiTags('Meetups')
 @Controller('meetups')
 export class MeetupsController {
-	constructor(private meetupsService: MeetupsService) {}
+	constructor(private readonly meetupsService: MeetupsService) {}
 
 	@ApiOperation({ summary: 'Get all meetups' })
 	@ApiResponse({ status: 200, type: [Meetup] })
 	@ApiHeader(swaggerAuthApiHeader)
 	@UseGuards(JwtAuthenticationGuard)
 	@Get()
-	getAll(
+	async getAll(
 		@Query('name') name: string,
 		@Query('take') take: number,
 		@Query('skip') skip: number,
 		@Query('sort_by') sortBy: MeetupQueryValueType,
 	) {
-		return this.meetupsService.getAllMeetups(name, take, skip, sortBy);
+		return await this.meetupsService.getAllMeetups(name, take, skip, sortBy);
 	}
 
 	@ApiOperation({ summary: 'Get meetup by id' })
@@ -39,8 +40,8 @@ export class MeetupsController {
 	@ApiHeader(swaggerAuthApiHeader)
 	@UseGuards(JwtAuthenticationGuard)
 	@Get(':id')
-	getById(@Param('id') id: string) {
-		return this.meetupsService.getMeetupById(id);
+	async getById(@Param('id') id: string) {
+		return await this.meetupsService.getMeetupById(id);
 	}
 
 	@ApiOperation({ summary: 'Create meetup' })
@@ -50,8 +51,8 @@ export class MeetupsController {
 	@UseGuards(RolesGuard)
 	@UseGuards(JwtAuthenticationGuard)
 	@Post('create')
-	create(@Body() dto: CreateMeetupDto) {
-		return this.meetupsService.createMeetup(dto);
+	async create(@Body() dto: CreateMeetupDto) {
+		return await this.meetupsService.createMeetup(dto);
 	}
 
 	@ApiOperation({ summary: 'Update meetup by id' })
@@ -61,8 +62,8 @@ export class MeetupsController {
 	@UseGuards(RolesGuard)
 	@UseGuards(JwtAuthenticationGuard)
 	@Patch(':id')
-	updateById(@Param('id') id: string, @Body() dto: UpdateMeetupDto) {
-		return this.meetupsService.updateMeetupById(id, dto);
+	async updateById(@Param('id') id: string, @Body() dto: UpdateMeetupDto) {
+		return await this.meetupsService.updateMeetupById(id, dto);
 	}
 
 	@ApiOperation({ summary: 'Delete meetup by id' })
@@ -72,8 +73,8 @@ export class MeetupsController {
 	@UseGuards(RolesGuard)
 	@UseGuards(JwtAuthenticationGuard)
 	@Delete(':id')
-	deleteById(@Param('id') id: string) {
-		return this.meetupsService.deleteMeetupById(id);
+	async deleteById(@Param('id') id: string) {
+		await this.meetupsService.deleteMeetupById(id);
 	}
 
 	@ApiOperation({ summary: 'Add tag to meetup' })
@@ -83,8 +84,8 @@ export class MeetupsController {
 	@UseGuards(RolesGuard)
 	@UseGuards(JwtAuthenticationGuard)
 	@Patch('addTag')
-	addTag(@Body() dto: AddTagDto) {
-		return this.meetupsService.addTag(dto);
+	async addTag(@Body() dto: AddTagDto) {
+		return await this.meetupsService.addTag(dto);
 	}
 
 	@ApiOperation({ summary: 'Sign user to meetup' })
@@ -92,7 +93,7 @@ export class MeetupsController {
 	@ApiHeader(swaggerAuthApiHeader)
 	@UseGuards(JwtAuthenticationGuard)
 	@Patch('sign')
-	sign(@UserParam() user: User, @Body() dto: SignUserToMeetupDto) {
-		return this.meetupsService.signUserToMeetup(dto, user);
+	async sign(@UserParam() user: User, @Body() dto: SignUserToMeetupDto) {
+		return await this.meetupsService.signUserToMeetup(dto, user);
 	}
 }

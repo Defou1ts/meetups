@@ -1,8 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { BelongsToMany, Column, DataType, Model, Table } from 'sequelize-typescript';
 import { Meetup } from 'src/meetups/models/meetups.model';
-import { User } from 'src/users/models/users.model';
+
 import { MeetupTags } from './meetup-tags';
+
+import type { User } from 'src/users/models/users.model';
 
 interface TagCreationAttrs {
 	name: string;

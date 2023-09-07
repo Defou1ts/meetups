@@ -1,19 +1,20 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { User } from './models/users.model';
 import { InjectModel } from '@nestjs/sequelize';
-import { CreateUserDto } from './dto/create-user-dto';
 import { RolesService } from 'src/roles/roles.service';
-import { SetRoleDto } from './dto/set-role.dto';
-import { UserRoles } from './constants/user-roles';
 import { Role } from 'src/roles/models/roles.model';
-import { Meetup } from 'src/meetups/models/meetups.model';
+
+import { User } from './models/users.model';
+import { UserRoles } from './constants/user-roles';
 import { UNKNOWN_USER_EXCEPTION, UNKNOWN_USER_ROLE_EXCEPTION } from './constants/user-exceptions';
+
+import type { CreateUserDto } from './dto/create-user-dto';
+import type { SetRoleDto } from './dto/set-role.dto';
 
 @Injectable()
 export class UsersService {
 	constructor(
-		@InjectModel(User) private usersRepository: typeof User,
-		private roleService: RolesService,
+		@InjectModel(User) private readonly usersRepository: typeof User,
+		private readonly roleService: RolesService,
 	) {}
 
 	async createUser(dto: CreateUserDto) {
@@ -44,8 +45,13 @@ export class UsersService {
 
 	async updateUserRefreshTokenByEmail(email: string, hashedRefreshToken: string) {
 		const user = await this.usersRepository.findOne({ where: { email } });
+
+		if (!user) {
+			throw new HttpException(UNKNOWN_USER_EXCEPTION, HttpStatus.NOT_FOUND);
+		}
+
 		user.set('hashedRefreshToken', hashedRefreshToken);
-		user.save();
+		await user.save();
 	}
 
 	async setRole(dto: SetRoleDto) {
