@@ -7,15 +7,11 @@ import {
 	UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { JwtService } from '@nestjs/jwt';
-import { ROLES_KEY } from './decrorators/roles-auth.decorator';
+import { ROLES_KEY } from '../decrorators/roles-auth.decorator';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
-	constructor(
-		private jwtService: JwtService,
-		private reflector: Reflector,
-	) {}
+	constructor(private reflector: Reflector) {}
 
 	canActivate(context: ExecutionContext): boolean {
 		const req = context.switchToHttp().getRequest();
@@ -33,6 +29,8 @@ export class RolesGuard implements CanActivate {
 			const request = context.switchToHttp().getRequest();
 
 			const user = request.user;
+
+			console.log(user);
 
 			return user.role.value === requiredRole;
 		} catch (e) {

@@ -5,11 +5,12 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { Meetup } from 'src/meetups/models/meetups.model';
 import { Tag } from './models/tags.model';
 import { MeetupTags } from './models/meetup-tags';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
 	providers: [TagsService],
 	controllers: [TagsController],
-	imports: [SequelizeModule.forFeature([Meetup, Tag, MeetupTags])],
+	imports: [SequelizeModule.forFeature([Meetup, Tag, MeetupTags]), JwtModule],
 	exports: [TagsService],
 })
 export class TagsModule {}

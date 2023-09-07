@@ -28,6 +28,7 @@ export class UsersService {
 	async getAllUsers() {
 		const users = await this.usersRepository.findAll({
 			attributes: { exclude: ['roleId'] },
+			include: { model: Role },
 		});
 		return users;
 	}
@@ -35,6 +36,7 @@ export class UsersService {
 	async getUserByEmail(email: string) {
 		const user = await this.usersRepository.findOne({
 			where: { email },
+			include: { model: Role },
 		});
 		return user;
 	}
