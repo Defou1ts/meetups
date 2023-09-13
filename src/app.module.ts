@@ -25,7 +25,7 @@ import { UserMeetups } from './users/models/user-meetups.model';
 			port: Number(process.env.POSTGRES_PORT),
 			username: process.env.POSTGRES_USER,
 			password: process.env.POSTGRES_PASSWORD,
-			database: process.env.POSTGRES_DB,
+			database: process.env.POSTGRES_DATABASE,
 			models: [User, Role, Meetup, Tag, MeetupTags, UserMeetups],
 			autoLoadModels: true,
 		}),
