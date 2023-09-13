@@ -9,6 +9,4 @@ RUN yarn install
 
 COPY . .
 
-COPY ./dist ./dist
-
 CMD ["yarn", "start:dev"]
