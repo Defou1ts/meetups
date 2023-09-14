@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
-import { ROLES_KEY } from '../decrorators/roles-auth.decorator';
+import { ROLES_KEY } from '../decorators/roles-auth.decorator';
 
 import type { CanActivate, ExecutionContext } from '@nestjs/common';
 

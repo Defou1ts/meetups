@@ -4,7 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 
 import { UsersModule } from './users/users.module';
 import { RolesModule } from './roles/roles.module';
-import { AuthModule } from './auth/auth.module';
+import { JwtAuthModule } from './auth/jwt-auth.module';
 import { MeetupsModule } from './meetups/meetups.module';
 import { TagsModule } from './tags/tags.module';
 import { postgresConfigRegister } from './config/postgres.config';
@@ -42,7 +42,7 @@ import type { PostgresConfig } from './config/postgres.config';
 		}),
 		UsersModule,
 		RolesModule,
-		AuthModule,
+		JwtAuthModule,
 		MeetupsModule,
 		TagsModule,
 	],

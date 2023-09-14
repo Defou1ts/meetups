@@ -1,12 +1,12 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
-import { UserParam } from 'src/auth/decrorators/user.decorator';
+import { UserParam } from 'src/users/decorators/user.decorator';
 import { User } from 'src/users/models/users.model';
 import { JwtAuthenticationGuard } from 'src/auth/guards/jwt-auth.guard';
 import { UserRoles } from 'src/users/constants/user-roles';
-import { RequiredRole } from 'src/auth/decrorators/roles-auth.decorator';
-import { RolesGuard } from 'src/auth/guards/roles-guard';
+import { RequiredRole } from 'src/users/decorators/roles-auth.decorator';
+import { RolesGuard } from 'src/users/guards/roles-guard';
 import { ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { swaggerAuthApiHeader } from 'src/auth/constants/swagger-auth-header';
+import { jwtSwaggerAuthApiHeader } from 'src/auth/constants/jwt-swagger-auth-header';
 
 import { MeetupQueryValueType } from './constants/sorts';
 import { Meetup } from './models/meetups.model';
@@ -23,7 +23,7 @@ export class MeetupsController {
 
 	@ApiOperation({ summary: 'Get all meetups' })
 	@ApiResponse({ status: 200, type: [Meetup] })
-	@ApiHeader(swaggerAuthApiHeader)
+	@ApiHeader(jwtSwaggerAuthApiHeader)
 	@UseGuards(JwtAuthenticationGuard)
 	@Get()
 	async getAll(
@@ -37,7 +37,7 @@ export class MeetupsController {
 
 	@ApiOperation({ summary: 'Get meetup by id' })
 	@ApiResponse({ status: 200, type: Meetup })
-	@ApiHeader(swaggerAuthApiHeader)
+	@ApiHeader(jwtSwaggerAuthApiHeader)
 	@UseGuards(JwtAuthenticationGuard)
 	@Get(':id')
 	async getById(@Param('id') id: string) {
@@ -46,7 +46,7 @@ export class MeetupsController {
 
 	@ApiOperation({ summary: 'Create meetup' })
 	@ApiResponse({ status: 201, type: Meetup })
-	@ApiHeader(swaggerAuthApiHeader)
+	@ApiHeader(jwtSwaggerAuthApiHeader)
 	@RequiredRole(UserRoles.ORGANIZER)
 	@UseGuards(RolesGuard)
 	@UseGuards(JwtAuthenticationGuard)
@@ -57,7 +57,7 @@ export class MeetupsController {
 
 	@ApiOperation({ summary: 'Update meetup by id' })
 	@ApiResponse({ status: 200, type: Meetup })
-	@ApiHeader(swaggerAuthApiHeader)
+	@ApiHeader(jwtSwaggerAuthApiHeader)
 	@RequiredRole(UserRoles.ORGANIZER)
 	@UseGuards(RolesGuard)
 	@UseGuards(JwtAuthenticationGuard)
@@ -68,7 +68,7 @@ export class MeetupsController {
 
 	@ApiOperation({ summary: 'Delete meetup by id' })
 	@ApiResponse({ status: 200 })
-	@ApiHeader(swaggerAuthApiHeader)
+	@ApiHeader(jwtSwaggerAuthApiHeader)
 	@RequiredRole(UserRoles.ORGANIZER)
 	@UseGuards(RolesGuard)
 	@UseGuards(JwtAuthenticationGuard)
@@ -79,7 +79,7 @@ export class MeetupsController {
 
 	@ApiOperation({ summary: 'Add tag to meetup' })
 	@ApiResponse({ status: 200, type: Meetup })
-	@ApiHeader(swaggerAuthApiHeader)
+	@ApiHeader(jwtSwaggerAuthApiHeader)
 	@RequiredRole(UserRoles.ORGANIZER)
 	@UseGuards(RolesGuard)
 	@UseGuards(JwtAuthenticationGuard)
@@ -90,7 +90,7 @@ export class MeetupsController {
 
 	@ApiOperation({ summary: 'Sign user to meetup' })
 	@ApiResponse({ status: 200, type: Meetup })
-	@ApiHeader(swaggerAuthApiHeader)
+	@ApiHeader(jwtSwaggerAuthApiHeader)
 	@UseGuards(JwtAuthenticationGuard)
 	@Patch('sign')
 	async sign(@UserParam() user: User, @Body() dto: SignUserToMeetupDto) {

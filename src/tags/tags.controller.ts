@@ -1,10 +1,10 @@
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
-import { RequiredRole } from 'src/auth/decrorators/roles-auth.decorator';
+import { RequiredRole } from 'src/users/decorators/roles-auth.decorator';
 import { JwtAuthenticationGuard } from 'src/auth/guards/jwt-auth.guard';
-import { RolesGuard } from 'src/auth/guards/roles-guard';
+import { RolesGuard } from 'src/users/guards/roles-guard';
 import { UserRoles } from 'src/users/constants/user-roles';
 import { ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { swaggerAuthApiHeader } from 'src/auth/constants/swagger-auth-header';
+import { jwtSwaggerAuthApiHeader } from 'src/auth/constants/jwt-swagger-auth-header';
 
 import { Tag } from './models/tags.model';
 import { CreateTagDto } from './dto/create-tag.dto';
@@ -17,7 +17,7 @@ export class TagsController {
 
 	@ApiOperation({ summary: 'Create tag for meetup' })
 	@ApiResponse({ status: 201, type: Tag })
-	@ApiHeader(swaggerAuthApiHeader)
+	@ApiHeader(jwtSwaggerAuthApiHeader)
 	@RequiredRole(UserRoles.ORGANIZER)
 	@UseGuards(RolesGuard)
 	@UseGuards(JwtAuthenticationGuard)

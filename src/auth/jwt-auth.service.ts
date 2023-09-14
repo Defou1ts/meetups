@@ -13,11 +13,11 @@ import { jwtConfigRegister, JwtConfig } from 'src/config/jwt.config';
 import { EncryptionConfig, encryptionConfigRegister } from 'src/config/encryption.config';
 
 import type { JwtPayload } from './strategies/jwt-strategy';
-import type { LoginResponseDto } from './dto/login-response.dto';
+import type { JwtLoginResponseDto } from './dto/jwt-login-response.dto';
 import type { CreateUserDto } from '../users/dto/create-user-dto';
 
 @Injectable()
-export class AuthService {
+export class JwtAuthService {
 	constructor(
 		@Inject(encryptionConfigRegister.KEY) private readonly encryptionConfig: EncryptionConfig,
 		@Inject(jwtConfigRegister.KEY) private readonly jwtConfig: JwtConfig,
@@ -25,7 +25,7 @@ export class AuthService {
 		private readonly jwtService: JwtService,
 	) {}
 
-	async login(userDto: CreateUserDto): Promise<LoginResponseDto> {
+	async login(userDto: CreateUserDto): Promise<JwtLoginResponseDto> {
 		const user = await this.validateUser(userDto);
 
 		const { email } = user;
@@ -41,7 +41,7 @@ export class AuthService {
 		};
 	}
 
-	async registration(userDto: CreateUserDto): Promise<LoginResponseDto> {
+	async registration(userDto: CreateUserDto): Promise<JwtLoginResponseDto> {
 		const candidate = await this.userService.getUserByEmail(userDto.email);
 
 		if (candidate) {
@@ -89,7 +89,7 @@ export class AuthService {
 		await this.userService.updateUserRefreshTokenByEmail(email, hashedRefreshToken);
 	}
 
-	async getNewAccessAndRefreshToken(payload: JwtPayload): Promise<LoginResponseDto> {
+	async getNewAccessAndRefreshToken(payload: JwtPayload): Promise<JwtLoginResponseDto> {
 		const refreshToken = await this.getRefreshToken(payload);
 		await this.updateRefreshTokenInUser(refreshToken, payload.email);
 

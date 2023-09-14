@@ -3,15 +3,15 @@ import { UsersModule } from 'src/users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 
-import { AuthController } from './auth.controller';
-import { AuthService } from './auth.service';
+import { JwtAuthController } from './jwt-auth.controller';
+import { JwtAuthService } from './jwt-auth.service';
 import { JwtStrategy } from './strategies/jwt-strategy';
 import { JwtRefreshStrategy } from './strategies/jwt-refresh-strategy';
 
 @Module({
-	controllers: [AuthController],
-	providers: [AuthService, JwtStrategy, JwtRefreshStrategy],
+	controllers: [JwtAuthController],
+	providers: [JwtAuthService, JwtStrategy, JwtRefreshStrategy],
 	imports: [forwardRef(() => UsersModule), JwtModule.register({}), PassportModule.register({})],
-	exports: [AuthService, JwtModule],
+	exports: [JwtAuthService, JwtModule],
 })
-export class AuthModule {}
+export class JwtAuthModule {}
