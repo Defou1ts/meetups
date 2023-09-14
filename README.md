@@ -46,7 +46,28 @@ $ yarn install
 
 Take care of correct POSTGRES_HOST=postgres if you run app in docker or in local machine
 
+### Dev .development.env example for docker:
+
 ```
-$ docker-compose build
-$ docker-compose up
+PORT=5000
+
+POSTGRES_HOST=postgres
+POSTGRES_USER=postgres
+POSTGRES_DB=meetups
+POSTGRES_PASSWORD=root
+POSTGRES_PORT=5432
+
+JWT_ACCESS_TOKEN_SECRET=access-secret
+JWT_ACCESS_TOKEN_EXPIRATION_TIME=900
+JWT_REFRESH_TOKEN_SECRET=refresh-secret
+JWT_REFRESH_TOKEN_EXPIRATION_TIME=28800
+
+SALT=5
+```
+
+### Start:
+
+```
+$ yarn docker:dev - dev docker start
+$ yarn docker:prod - prod docker start
 ```
