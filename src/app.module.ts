@@ -16,7 +16,7 @@ import { UserMeetups } from './users/models/user-meetups.model';
 import { User } from './users/models/users.model';
 import { jwtConfigRegister } from './config/jwt.config';
 import { encryptionConfigRegister } from './config/encryption.config';
-import { appConfigRegister } from './config/app.config copy';
+import { appConfigRegister } from './config/app.config';
 
 import type { PostgresConfig } from './config/postgres.config';
 

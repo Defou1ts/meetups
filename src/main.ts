@@ -3,9 +3,9 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
 import { ClassValidationPipe } from './pipes/class-validation.pipe';
-import { appConfigRegister } from './config/app.config copy';
+import { appConfigRegister } from './config/app.config';
 
-import type { AppConfig } from './config/app.config copy';
+import type { AppConfig } from './config/app.config';
 
 async function start() {
 	const app = await NestFactory.create(AppModule);
