@@ -10,9 +10,10 @@ import { JwtModule } from '@nestjs/jwt';
 import { Meetup } from './models/meetups.model';
 import { MeetupsController } from './meetups.controller';
 import { MeetupsService } from './meetups.service';
+import { MeetupsRepository } from './meetups.repository';
 
 @Module({
-	providers: [MeetupsService],
+	providers: [MeetupsService, MeetupsRepository],
 	controllers: [MeetupsController],
 	imports: [SequelizeModule.forFeature([Meetup, Tag, MeetupTags, User, UserMeetups]), TagsModule, JwtModule],
 })

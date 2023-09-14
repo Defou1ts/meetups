@@ -1,11 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/sequelize';
 import { RolesService } from 'src/roles/roles.service';
-import { Role } from 'src/roles/models/roles.model';
 
-import { User } from './models/users.model';
 import { UserRoles } from './constants/user-roles';
 import { UNKNOWN_USER_EXCEPTION, UNKNOWN_USER_ROLE_EXCEPTION } from './constants/user-exceptions';
+import { UsersRepository } from './users.repository';
 
 import type { CreateUserDto } from './dto/create-user-dto';
 import type { SetRoleDto } from './dto/set-role.dto';
@@ -13,7 +11,7 @@ import type { SetRoleDto } from './dto/set-role.dto';
 @Injectable()
 export class UsersService {
 	constructor(
-		@InjectModel(User) private readonly usersRepository: typeof User,
+		private readonly usersRepository: UsersRepository,
 		private readonly roleService: RolesService,
 	) {}
 
@@ -30,21 +28,15 @@ export class UsersService {
 	}
 
 	async getAllUsers() {
-		return await this.usersRepository.findAll({
-			attributes: { exclude: ['roleId'] },
-			include: { model: Role },
-		});
+		return await this.usersRepository.getAll();
 	}
 
 	async getUserByEmail(email: string) {
-		return await this.usersRepository.findOne({
-			where: { email },
-			include: { model: Role },
-		});
+		return await this.usersRepository.getByEmail(email);
 	}
 
 	async updateUserRefreshTokenByEmail(email: string, hashedRefreshToken: string) {
-		const user = await this.usersRepository.findOne({ where: { email } });
+		const user = await this.usersRepository.getByEmail(email);
 
 		if (!user) {
 			throw new HttpException(UNKNOWN_USER_EXCEPTION, HttpStatus.NOT_FOUND);
@@ -55,7 +47,7 @@ export class UsersService {
 	}
 
 	async setRole(dto: SetRoleDto) {
-		const user = await this.usersRepository.findByPk(dto.userId);
+		const user = await this.usersRepository.getByPrimaryKey(dto.userId);
 		const role = await this.roleService.getRoleByValue(dto.value);
 
 		if (!role) {

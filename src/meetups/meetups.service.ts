@@ -1,10 +1,8 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/sequelize';
 import { TagsService } from 'src/tags/tags.service';
-import { Op } from 'sequelize';
 
-import { Meetup } from './models/meetups.model';
-import { meetupSortQueryValues, meetupSortTypes } from './constants/sorts';
+import { meetupSortQueryValues } from './constants/sorts';
+import { MeetupsRepository } from './meetups.repository';
 
 import type { CreateMeetupDto } from './dto/create-meetup.dto';
 import type { UpdateMeetupDto } from './dto/update-meetup.dto';
@@ -16,7 +14,7 @@ import type { MeetupQueryValueType } from './constants/sorts';
 @Injectable()
 export class MeetupsService {
 	constructor(
-		@InjectModel(Meetup) private readonly meetupsRepository: typeof Meetup,
+		private readonly meetupsRepository: MeetupsRepository,
 		private readonly tagsService: TagsService,
 	) {}
 
@@ -28,20 +26,11 @@ export class MeetupsService {
 	) {
 		if (!meetupSortQueryValues.includes(sortBy)) throw new BadRequestException();
 
-		const sortType = meetupSortTypes[sortBy];
-
-		const whereCondition = name ? { name: { [Op.like]: `%${name.toLowerCase()}%` } } : {};
-
-		return await this.meetupsRepository.findAll({
-			where: whereCondition,
-			limit: take,
-			offset: skip,
-			order: [['name', sortType]],
-		});
+		return await this.meetupsRepository.getAllByParams(name, take, skip, sortBy);
 	}
 
-	async getMeetupById(id: string) {
-		const meetup = await this.meetupsRepository.findOne({ where: { id } });
+	async getMeetupById(id: number) {
+		const meetup = await this.meetupsRepository.getByPrimaryKey(id);
 
 		if (!meetup) throw new NotFoundException();
 
@@ -52,8 +41,8 @@ export class MeetupsService {
 		return await this.meetupsRepository.create(dto);
 	}
 
-	async updateMeetupById(id: string, dto: UpdateMeetupDto) {
-		const meetup = await this.meetupsRepository.findOne({ where: { id } });
+	async updateMeetupById(id: number, dto: UpdateMeetupDto) {
+		const meetup = await this.meetupsRepository.getByPrimaryKey(id);
 
 		if (!meetup) throw new NotFoundException();
 
@@ -61,8 +50,8 @@ export class MeetupsService {
 		return await meetup.save();
 	}
 
-	async deleteMeetupById(id: string) {
-		const meetup = await this.meetupsRepository.findOne({ where: { id } });
+	async deleteMeetupById(id: number) {
+		const meetup = await this.meetupsRepository.getByPrimaryKey(id);
 
 		if (!meetup) throw new NotFoundException();
 
@@ -70,7 +59,7 @@ export class MeetupsService {
 	}
 
 	async addTag({ meetupId, tagId }: AddTagDto) {
-		const meetup = await this.meetupsRepository.findByPk(meetupId);
+		const meetup = await this.meetupsRepository.getByPrimaryKey(meetupId);
 		const tag = await this.tagsService.getTagById(tagId);
 
 		if (!tag || !meetup) throw new NotFoundException();
@@ -81,7 +70,7 @@ export class MeetupsService {
 	}
 
 	async signUserToMeetup({ meetupId }: SignUserToMeetupDto, user: User) {
-		const meetup = await this.meetupsRepository.findByPk(meetupId);
+		const meetup = await this.meetupsRepository.getByPrimaryKey(meetupId);
 
 		if (!meetup) throw new NotFoundException();
 

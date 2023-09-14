@@ -1,16 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/sequelize';
 
-import { Tag } from './models/tags.model';
+import { TagsRepository } from './tags.repository';
 
 import type { CreateTagDto } from './dto/create-tag.dto';
 
 @Injectable()
 export class TagsService {
-	constructor(@InjectModel(Tag) private readonly tagsRepository: typeof Tag) {}
+	constructor(private readonly tagsRepository: TagsRepository) {}
 
 	async getAllTags() {
-		return await this.tagsRepository.findAll();
+		return await this.tagsRepository.getAll();
 	}
 
 	async createTag(dto: CreateTagDto) {
@@ -18,6 +17,6 @@ export class TagsService {
 	}
 
 	async getTagById(id: number) {
-		return await this.tagsRepository.findByPk(id);
+		return await this.tagsRepository.getByPrimaryKey(id);
 	}
 }

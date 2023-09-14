@@ -9,10 +9,11 @@ import { User } from './models/users.model';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { UserMeetups } from './models/user-meetups.model';
+import { UsersRepository } from './users.repository';
 
 @Module({
 	controllers: [UsersController],
-	providers: [UsersService],
+	providers: [UsersService, UsersRepository],
 	imports: [
 		SequelizeModule.forFeature([User, Role, Meetup, UserMeetups]),
 		RolesModule,

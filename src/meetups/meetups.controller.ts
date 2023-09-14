@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { UserParam } from 'src/users/decorators/user.decorator';
 import { User } from 'src/users/models/users.model';
 import { JwtAuthenticationGuard } from 'src/auth/guards/jwt-auth.guard';
@@ -40,7 +40,7 @@ export class MeetupsController {
 	@ApiHeader(jwtSwaggerAuthApiHeader)
 	@UseGuards(JwtAuthenticationGuard)
 	@Get(':id')
-	async getById(@Param('id') id: string) {
+	async getById(@Param('id', new ParseIntPipe()) id: number) {
 		return await this.meetupsService.getMeetupById(id);
 	}
 
@@ -62,7 +62,7 @@ export class MeetupsController {
 	@UseGuards(RolesGuard)
 	@UseGuards(JwtAuthenticationGuard)
 	@Patch(':id')
-	async updateById(@Param('id') id: string, @Body() dto: UpdateMeetupDto) {
+	async updateById(@Param('id', new ParseIntPipe()) id: number, @Body() dto: UpdateMeetupDto) {
 		return await this.meetupsService.updateMeetupById(id, dto);
 	}
 
@@ -73,7 +73,7 @@ export class MeetupsController {
 	@UseGuards(RolesGuard)
 	@UseGuards(JwtAuthenticationGuard)
 	@Delete(':id')
-	async deleteById(@Param('id') id: string) {
+	async deleteById(@Param('id', new ParseIntPipe()) id: number) {
 		await this.meetupsService.deleteMeetupById(id);
 	}
 

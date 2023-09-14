@@ -1,13 +1,12 @@
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/sequelize';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { Role } from './models/roles.model';
+import { RolesRepository } from './roles.repository';
 
 import type { CreateRoleDto } from './dto/create-role.dto';
 
 @Injectable()
 export class RolesService {
-	constructor(@InjectModel(Role) private readonly rolesRepository: typeof Role) {}
+	constructor(private readonly rolesRepository: RolesRepository) {}
 
 	async createRole(dto: CreateRoleDto) {
 		const role = await this.rolesRepository.create(dto);
@@ -15,7 +14,10 @@ export class RolesService {
 	}
 
 	async getRoleByValue(value: string) {
-		const role = await this.rolesRepository.findOne({ where: { value } });
+		const role = await this.rolesRepository.getByValue(value);
+
+		if (!role) throw new NotFoundException();
+
 		return role;
 	}
 }

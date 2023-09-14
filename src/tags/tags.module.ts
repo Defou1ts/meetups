@@ -7,9 +7,10 @@ import { TagsService } from './tags.service';
 import { TagsController } from './tags.controller';
 import { Tag } from './models/tags.model';
 import { MeetupTags } from './models/meetup-tags';
+import { TagsRepository } from './tags.repository';
 
 @Module({
-	providers: [TagsService],
+	providers: [TagsService, TagsRepository],
 	controllers: [TagsController],
 	imports: [SequelizeModule.forFeature([Meetup, Tag, MeetupTags]), JwtModule],
 	exports: [TagsService],
